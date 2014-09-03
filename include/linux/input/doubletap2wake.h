@@ -22,5 +22,6 @@
 #define _LINUX_DOUBLETAP2WAKE_H
 
 extern int dt2w_switch;
+extern bool in_phone_call;
 
 #endif	/* _LINUX_DOUBLETAP2WAKE_H */
