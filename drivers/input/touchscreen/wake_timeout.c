@@ -24,6 +24,10 @@
 #include <linux/sysfs.h>
 #include <linux/init.h>
 
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+#include <linux/input/doubletap2wake.h>
+#endif
+
 #define WAKE_TIMEOUT_MAJOR_VERSION	1
 #define WAKE_TIMEOUT_MINOR_VERSION	0
 #define WAKEFUNC "wakefunc"
@@ -149,7 +153,7 @@ static int lcd_notifier_callback(struct notifier_block *this,
 	case LCD_EVENT_ON_END:
 		break;
 	case LCD_EVENT_OFF_START:
-		if (pwrkey_pressed == false && wakefunc_triggered == false && wake_timeout > 0) {
+		if (pwrkey_pressed == false && wakefunc_triggered == false && wake_timeout > 0 && in_phone_call == false) {
 			wakefunc_rtc_start();
 		}
 		break;
