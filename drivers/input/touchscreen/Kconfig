@@ -1034,5 +1034,9 @@ config TOUCHSCREEN_CHARGER_NOTIFY
 endif
 
 config TOUCHSCREEN_DOUBLETAP2WAKE
-tristate "DoubleTap2Wake for touchscreens"
-default n
+	tristate "DoubleTap2Wake for touchscreens"
+	default n
+
+config PWRKEY_SUSPEND
+	tristate "Suspend touch wake if power button pressed"
+	default n
