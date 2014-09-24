@@ -1032,3 +1032,7 @@ config TOUCHSCREEN_CHARGER_NOTIFY
 	  a new algorithm to reduce the noise impact needs to be applied
 	  or not.
 endif
+
+config TOUCHSCREEN_DOUBLETAP2WAKE
+tristate "DoubleTap2Wake for touchscreens"
+default n
