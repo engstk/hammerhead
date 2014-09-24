@@ -40,6 +40,30 @@
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 #include <linux/input/doubletap2wake.h>
+
+static bool prevent_sleep_irq_wake_enabled = false;
+static void prevent_sleep_enable_irq_wake(unsigned int irq){
+	if(!prevent_sleep_irq_wake_enabled){
+		prevent_sleep_irq_wake_enabled = true;
+		enable_irq_wake(irq);
+		pr_info("irq_wake enabled\n");
+	}
+	else
+		pr_info("irq_wake already enabled\n");
+}
+static void prevent_sleep_disable_irq_wake(unsigned int irq){
+	if(prevent_sleep_irq_wake_enabled){
+		prevent_sleep_irq_wake_enabled = false;
+		disable_irq_wake(irq);
+		pr_info("irq_wake disabled\n");
+	}
+	else
+		pr_info("irq_wake already disabled\n");
+}
+#endif
+
+#ifdef CONFIG_PWRKEY_SUSPEND
+#include <linux/qpnp/power-on.h>
 #endif
 
 static struct workqueue_struct *synaptics_wq;
@@ -1671,12 +1695,22 @@ static int lcd_notifier_callback(struct notifier_block *this,
 	bool prevent_sleep = (dt2w_switch > 0);
 	#endif
 
+	#ifdef CONFIG_PWRKEY_SUSPEND
+	if (pwrkey_pressed)
+		prevent_sleep = false;
+	#endif
+	
 	TOUCH_DEBUG_TRACE("%s: event = %lu\n", __func__, event);
 
 	switch (event) {
 	case LCD_EVENT_ON_START:
 		mutex_lock(&ts->input_dev->mutex);
 		synaptics_ts_start(ts);
+		#ifdef CONFIG_PWRKEY_SUSPEND
+		if (pwrkey_pressed) {
+			pwrkey_pressed = false;
+		}
+		#endif
 		break;
 	case LCD_EVENT_ON_END:
 		if (!ts->curr_resume_state) {
@@ -1688,7 +1722,7 @@ static int lcd_notifier_callback(struct notifier_block *this,
 		mutex_unlock(&ts->input_dev->mutex);
 		#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 		if (prevent_sleep)
-			disable_irq_wake(ts->client->irq);
+			prevent_sleep_disable_irq_wake(ts->client->irq);
 		#endif
 		break;
 	case LCD_EVENT_OFF_START:
@@ -1711,7 +1745,7 @@ static int lcd_notifier_callback(struct notifier_block *this,
 		}
 		#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 		if (prevent_sleep)
-			enable_irq_wake(ts->client->irq);
+			prevent_sleep_enable_irq_wake(ts->client->irq);
 		#endif
 		break;
 	default:
@@ -1846,11 +1880,7 @@ static int synaptics_ts_probe(
 	gpio_direction_input(ts->pdata->irq_gpio);
 
 	ret = request_threaded_irq(client->irq, NULL, touch_irq_handler,
-	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-			IRQF_TRIGGER_FALLING | IRQF_ONESHOT | IRQF_NO_SUSPEND, client->name, ts);
-	#else
 			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, client->name, ts);
-	#endif
 
 	if (ret < 0) {
 		TOUCH_ERR_MSG("request_irq failed. use polling mode\n");
