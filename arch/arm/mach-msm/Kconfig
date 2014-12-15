@@ -2901,6 +2901,13 @@ config MSM_DCVS
 	  algorithm and the algorithm returns a frequency for the core which is
 	  passed to the frequency change driver.
 
+config BLU_PLUG
+	bool "Dynamic hotplug driver"
+	depends on HOTPLUG_CPU
+	default n
+	help
+	  The Dynamic hotplug driver automatically online/offline CPUs proportional to system load.
+
 config MSM_CPR
 	tristate "Use MSM CPR in S/W mode"
 	help
