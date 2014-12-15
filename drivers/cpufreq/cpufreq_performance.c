@@ -26,6 +26,7 @@ static int cpufreq_governor_performance(struct cpufreq_policy *policy,
 						policy->max, event);
 		__cpufreq_driver_target(policy, policy->max,
 						CPUFREQ_RELATION_H);
+		cpufreq_notify_utilization(policy, 100);
 		break;
 	default:
 		break;
