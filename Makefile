@@ -566,6 +566,8 @@ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
 KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized)
+KBUILD_CFLAGS	+= $(call cc-disable-warning,array-bounds)
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
@@ -599,7 +601,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 # incompatible with -fomit-frame-pointer with current GCC, so we don't use
 # -fomit-frame-pointer with FUNCTION_TRACER.
 # ifndef CONFIG_FUNCTION_TRACER
-# KBUILD_CFLAGS	+= -fomit-frame-pointer
+KBUILD_CFLAGS	+= -fomit-frame-pointer
 # endif
 # endif
 
