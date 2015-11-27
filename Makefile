@@ -352,13 +352,12 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS		= -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -mtune=cortex-a15 -mfpu=neon-vfpv4
-GRAPHITE		= -marm -fopenmp -fgraphite -fgraphite-identity -floop-flatten -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-nest-optimize
-CFLAGS_MODULE   = -DMODULE $(KERNELFLAGS) $(GRAPHITE)
-AFLAGS_MODULE   = -DMODULE $(KERNELFLAGS) $(GRAPHITE)
+KERNELFLAGS		= -marm -fopenmp -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -floop-flatten -mtune=cortex-a15 -mfpu=neon-vfpv4
+CFLAGS_MODULE   = -DMODULE $(KERNELFLAGS)
+AFLAGS_MODULE   = -DMODULE $(KERNELFLAGS)
 LDFLAGS_MODULE  = --strip-debug
-CFLAGS_KERNEL	= $(KERNELFLAGS) $(GRAPHITE)
-AFLAGS_KERNEL	= $(KERNELFLAGS) $(GRAPHITE)
+CFLAGS_KERNEL	= $(KERNELFLAGS)
+AFLAGS_KERNEL	= $(KERNELFLAGS)
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
@@ -376,7 +375,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks\
-		   $(KERNELFLAGS) $(GRAPHITE)
+		   $(KERNELFLAGS)
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
