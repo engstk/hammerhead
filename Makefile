@@ -245,7 +245,7 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers -Wno-unused-variable
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -fgcse-las -std=gnu89 -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers -Wno-unused-variable
 HOSTCXXFLAGS = -O3
 
 # Decide whether to build built-in, modular, or both.
@@ -352,7 +352,7 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-KERNELFLAGS		= -marm -fopenmp -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -floop-flatten -mtune=cortex-a15 -mfpu=neon-vfpv4
+KERNELFLAGS		= -std=gnu89 -marm -fopenmp -munaligned-access -fgcse-lm -fgcse-sm -fsched-spec-load -fgcse-after-reload -ffast-math -fsingle-precision-constant -funswitch-loops -floop-flatten -fmodulo-sched -fmodulo-sched-allow-regmoves -fpredictive-commoning -mtune=cortex-a15 -mfpu=neon-vfpv4
 CFLAGS_MODULE   = -DMODULE $(KERNELFLAGS)
 AFLAGS_MODULE   = -DMODULE $(KERNELFLAGS)
 LDFLAGS_MODULE  = --strip-debug
