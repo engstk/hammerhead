@@ -84,3 +84,4 @@ GTAGS
 *.orig
 *~
 \#*#
+smd_rpc_sym.c
