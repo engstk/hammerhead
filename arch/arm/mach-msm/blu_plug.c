@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2013 Stratos Karafotis <stratosk@semaphore.gr> (dyn_hotplug for mako)
  *
- * Copyright (C) 2015 engstk <eng.stk@sapo.pt> (hammerhead & shamu implementation, fixes and changes to blu_plug)
+ * Copyright (C) 2014-2016 engstk <eng.stk@sapo.pt> (hammerhead,shamu, osprey and onyx implementation, fixes and changes to blu_plug)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -28,7 +28,7 @@
 
 #define INIT_DELAY		(60 * HZ) /* Initial delay to 60 sec, 4 cores while boot */
 #define DELAY			(HZ / 2)
-#define UP_THRESHOLD		(80)
+#define UP_THRESHOLD		(90)
 #define MIN_ONLINE		(2)
 #define MAX_ONLINE		(4)
 #define DEF_DOWN_TIMER_CNT	(6)	/* 3 secs */
