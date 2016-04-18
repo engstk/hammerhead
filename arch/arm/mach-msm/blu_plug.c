@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2013 Stratos Karafotis <stratosk@semaphore.gr> (dyn_hotplug for mako)
  *
- * Copyright (C) 2014-2016 engstk <eng.stk@sapo.pt> (hammerhead,shamu, osprey and onyx implementation, fixes and changes to blu_plug)
+ * Copyright (C) 2014-2016 engstk <eng.stk@sapo.pt> (hammerhead, shamu, osprey and onyx implementation, fixes and changes to blu_plug)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -26,8 +26,8 @@
 #include <linux/delay.h>
 #include <linux/slab.h>
 
-#define INIT_DELAY		(60 * HZ) /* Initial delay to 60 sec, 4 cores while boot */
-#define DELAY			(HZ / 2)
+#define INIT_DELAY		(60000) /* Initial delay to 60 sec, 4 cores while boot */
+#define DELAY			(500)
 #define UP_THRESHOLD		(90)
 #define MIN_ONLINE		(2)
 #define MAX_ONLINE		(4)
@@ -174,7 +174,7 @@ static __ref void load_timer(struct work_struct *work)
 	else if (down_timer >= down_timer_cnt)
 		down_one();
 
-	queue_delayed_work_on(0, dyn_workq, &dyn_work, delay);
+	queue_delayed_work_on(0, dyn_workq, &dyn_work, msecs_to_jiffies(delay));
 }
 
 
@@ -195,7 +195,7 @@ static __ref void dyn_lcd_resume(struct work_struct *work)
 {
 	up_all();
 	
-	queue_delayed_work_on(0, dyn_workq, &dyn_work, delay);
+	queue_delayed_work_on(0, dyn_workq, &dyn_work, msecs_to_jiffies(delay));
 }
 
 static int fb_notifier_callback(struct notifier_block *self, unsigned long event, void *data)
@@ -406,7 +406,7 @@ static int __init dyn_hp_init(void)
 	INIT_WORK(&resume, dyn_lcd_resume);
 	INIT_WORK(&suspend, dyn_lcd_suspend);
 	INIT_DELAYED_WORK(&dyn_work, load_timer);
-	queue_delayed_work_on(0, dyn_workq, &dyn_work, INIT_DELAY);
+	queue_delayed_work_on(0, dyn_workq, &dyn_work, msecs_to_jiffies(INIT_DELAY));
 
 	pr_info("%s: activated\n", __func__);
 
@@ -424,7 +424,7 @@ static void __exit dyn_hp_exit(void)
 
 MODULE_AUTHOR("Stratos Karafotis <stratosk@semaphore.gr");
 MODULE_AUTHOR("engstk <eng.stk@sapo.pt>");
-MODULE_DESCRIPTION("'dyn_hotplug' - A dynamic hotplug driver for mako / hammerhead / shamu (blu_plug)");
+MODULE_DESCRIPTION("'dyn_hotplug' - A dynamic hotplug driver for mako / hammerhead / shamu / osprey / onyx (blu_plug)");
 MODULE_LICENSE("GPLv2");
 
 late_initcall(dyn_hp_init);
