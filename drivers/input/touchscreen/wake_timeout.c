@@ -31,7 +31,7 @@
 #define WAKE_TIMEOUT_MAJOR_VERSION	1
 #define WAKE_TIMEOUT_MINOR_VERSION	0
 #define WAKEFUNC "wakefunc"
-#define PWRKEY_DUR		60
+#define PWRKEY_DUR		180
 
 static struct input_dev * wake_pwrdev;
 static DEFINE_MUTEX(pwrkeyworklock);

@@ -49,9 +49,9 @@ MODULE_LICENSE("GPLv2");
 #define DT2W_DEBUG		0
 #define DT2W_DEFAULT		0
 
-#define DT2W_PWRKEY_DUR		60
+#define DT2W_PWRKEY_DUR		180
 #define DT2W_FEATHER		150
-#define DT2W_TIME           50
+#define DT2W_TIME           150
 
 static struct wake_lock dt2w_wakelock;
 
@@ -133,7 +133,7 @@ static void new_touch(int x, int y) {
 	x_pre = x;
 	y_pre = y;
 	touch_nr++;
-	wake_lock_timeout(&dt2w_wakelock, HZ/2);
+	wake_lock_timeout(&dt2w_wakelock, msecs_to_jiffies(500));
 }
 
 /* Doubletap2wake main function */
